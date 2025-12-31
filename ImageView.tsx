@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { generateImage } from './geminiService';
-import { GeneratedImage } from './types';
+import { generateImage } from '../geminiService';
+import { GeneratedImage } from '../types';
 
 const ImageView: React.FC = () => {
   const [prompt, setPrompt] = useState('');

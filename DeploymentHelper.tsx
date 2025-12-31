@@ -14,6 +14,7 @@ const DeploymentHelper: React.FC = () => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
+        // Jeszcze mniejszy rozmiar dla pewności na Netlify
         const MAX_DIM = 600;
         let width = img.width;
         let height = img.height;
@@ -35,6 +36,7 @@ const DeploymentHelper: React.FC = () => {
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(img, 0, 0, width, height);
 
+        // Agresywna kompresja JPEG (0.5) - gwarancja miejsca w localStorage
         const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
         try {
           const storageKey = type === 'szaszlyk' ? 'user_szaszlyk' : 'user_egzamin';
@@ -85,6 +87,7 @@ const DeploymentHelper: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Szaszłyk */}
         <div className="space-y-4">
           <label className="group cursor-pointer block">
             <div className={`relative aspect-square rounded-[40px] border-4 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center gap-4 ${previews.szaszlyk ? 'border-yellow-500/50' : 'border-white/10 bg-white/5 hover:border-yellow-500/30'}`}>
@@ -101,6 +104,7 @@ const DeploymentHelper: React.FC = () => {
           </label>
         </div>
 
+        {/* Egzamin */}
         <div className="space-y-4">
           <label className="group cursor-pointer block">
             <div className={`relative aspect-square rounded-[40px] border-4 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center gap-4 ${previews.egzamin ? 'border-blue-500/50' : 'border-white/10 bg-white/5 hover:border-blue-500/30'}`}>

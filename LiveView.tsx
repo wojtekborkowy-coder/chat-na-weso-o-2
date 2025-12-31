@@ -2,6 +2,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { GoogleGenAI, Modality, LiveServerMessage } from '@google/genai';
 
+// Implementation of required audio helper functions as per @google/genai documentation
 function encode(bytes: Uint8Array) {
   let binary = '';
   const len = bytes.byteLength;
@@ -80,6 +81,7 @@ const LiveView: React.FC = () => {
                 mimeType: 'audio/pcm;rate=16000',
               };
 
+              // CRITICAL: Always use sessionPromise to avoid race conditions and stale closures
               sessionPromise.then(session => {
                 session.sendRealtimeInput({ media: pcmBlob });
               });
@@ -91,6 +93,7 @@ const LiveView: React.FC = () => {
           onmessage: async (msg: LiveServerMessage) => {
             const base64EncodedAudioString = msg.serverContent?.modelTurn?.parts[0]?.inlineData?.data;
             if (base64EncodedAudioString) {
+              // Schedule gapless playback
               nextStartTimeRef.current = Math.max(
                 nextStartTimeRef.current,
                 outputAudioContext.currentTime,
@@ -116,6 +119,7 @@ const LiveView: React.FC = () => {
               sourcesRef.current.add(source);
             }
 
+            // Handle interruption signal
             const interrupted = msg.serverContent?.interrupted;
             if (interrupted) {
               for (const source of sourcesRef.current.values()) {

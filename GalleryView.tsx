@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { generateImage } from './geminiService';
+import { generateImage } from '../geminiService';
 
 const GalleryView: React.FC = () => {
   const [images, setImages] = useState({
@@ -10,6 +10,7 @@ const GalleryView: React.FC = () => {
 
   const [isGenerating, setIsGenerating] = useState({ szaszlyk: false, egzamin: false });
 
+  // Monitoruj zmiany w localStorage (np. po wgraniu w innej zakładce)
   useEffect(() => {
     const refresh = () => {
       setImages({
@@ -22,10 +23,13 @@ const GalleryView: React.FC = () => {
   }, []);
 
   const handleImageError = async (type: 'szaszlyk' | 'egzamin') => {
+    // Jeśli to jest wgrane zdjęcie i nie działa, to usuwamy je z widoku (prawdopodobnie uszkodzony base64)
     if (images[type].startsWith('data:')) {
       return;
     }
-    if (isGenerating[type]) return;
+
+    // Jeśli nie ma pliku na serwerze, odpal AI
+    if (isGenerating[type]) return; // Nie generuj dwa razy naraz
 
     setIsGenerating(prev => ({ ...prev, [type]: true }));
     try {
@@ -50,6 +54,7 @@ const GalleryView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Renderowanie zdjęcia 1 */}
         <div className="space-y-6">
           <div className="relative rounded-[40px] overflow-hidden border-8 border-yellow-500/10 shadow-2xl aspect-[3/4] bg-gray-900">
             {isGenerating.szaszlyk ? (
@@ -74,6 +79,7 @@ const GalleryView: React.FC = () => {
           </div>
         </div>
 
+        {/* Renderowanie zdjęcia 2 */}
         <div className="space-y-6">
           <div className="relative rounded-[40px] overflow-hidden border-8 border-blue-500/10 shadow-2xl aspect-[3/4] bg-gray-900">
             {isGenerating.egzamin ? (

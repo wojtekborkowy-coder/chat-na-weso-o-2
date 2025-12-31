@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Message } from './types';
-import { generateWojtekResponse, generateWojtekSpeech } from './geminiService';
+import { Message } from '../types';
+import { generateWojtekResponse, generateWojtekSpeech } from '../geminiService';
 
 const ChatView: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -48,11 +48,13 @@ const ChatView: React.FC = () => {
     if (isSpeaking === index) return;
     setIsSpeaking(index);
     try {
+      // Usunięcie gwiazdek z tekstu, żeby lektor nie czytał "gwiazdka kopfschmerzen gwiazdka"
       const cleanText = text.replace(/\*/g, '');
       await generateWojtekSpeech(cleanText);
     } catch (err) {
       console.error("Speech error", err);
     } finally {
+      // Czas trwania animacji pulsu (zależny od długości tekstu w przybliżeniu)
       const duration = Math.min(text.length * 60, 5000); 
       setTimeout(() => setIsSpeaking(null), duration);
     }
@@ -60,6 +62,7 @@ const ChatView: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full bg-[#050505] relative overflow-hidden">
+      {/* Wojtek Header */}
       <div className="px-6 py-4 bg-yellow-500/5 border-b border-yellow-500/10 flex items-center justify-between z-10 shadow-2xl">
         <div className="flex items-center gap-3">
           <div className="w-14 h-14 rounded-[20px] bg-yellow-500 flex items-center justify-center text-black font-black border-2 border-black rotate-3 shadow-lg shadow-yellow-500/20 overflow-hidden relative group">

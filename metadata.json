@@ -1,0 +1,8 @@
+{
+  "name": "Gemini Elite Studio",
+  "description": "A high-end development environment for testing and deploying Gemini models, including text generation, image creation, and real-time voice interaction.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
